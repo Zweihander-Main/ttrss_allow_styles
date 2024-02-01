@@ -35,11 +35,5 @@ class TTRSS_Allow_Styles extends Plugin
 		return [$doc, $allowed_elements, $disallowed_attributes];
 	}
 
-		$disallowed_attributes = array_filter( $disallowed_attributes, function( $attr ) {
-			return $attr !== 'style';
-		} );
-
-		return [ $doc, $allowed_elements, $disallowed_attributes ];
-	}
-
+	// TODO: create preference and hookup
 }
