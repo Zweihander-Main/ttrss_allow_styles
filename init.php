@@ -15,6 +15,17 @@ class TTRSS_Allow_Styles extends Plugin
 		return 2;
 	}
 
+	private function get_stored_array($name)
+	{
+		$tmp = $this->host->get($this, $name);
+
+		if (!is_array($tmp))
+			$tmp = [];
+
+		return $tmp;
+	}
+
+
 	private $host;
 
 	public function init($host)
@@ -23,6 +34,7 @@ class TTRSS_Allow_Styles extends Plugin
 
 		$host->add_hook($host::HOOK_SANITIZE, $this);
 		$host->add_hook($host::HOOK_PREFS_EDIT_FEED, $this);
+		$host->add_hook($host::HOOK_PREFS_SAVE_FEED, $this);
 	}
 
 	public function hook_sanitize($doc, $site_url, $allowed_elements, $disallowed_attributes, $article_id)
@@ -34,6 +46,45 @@ class TTRSS_Allow_Styles extends Plugin
 
 		return [$doc, $allowed_elements, $disallowed_attributes];
 	}
+
+	public function hook_prefs_edit_feed($feed_id)
+	{
+		$enabled_feeds = $this->get_stored_array("enabled_feeds");
+		?>
+
+		<header><?= __("Styles") ?></header>
+		<section>
+			<fieldset>
+				<label class='checkbox'>
+					<?= \Controls\checkbox_tag("ttrss_allow_styles", in_array($feed_id, $enabled_feeds)) ?>
+					<?= __('Allow \'styles\' attribute in feed items.') ?>
+				</label>
+			</fieldset>
+		</section>
+		<?php
+	}
+
+	function hook_prefs_save_feed($feed_id)
+	{
+		$enabled_feeds = $this->get_stored_array("enabled_feeds");
+
+		$enable = checkbox_to_sql_bool($_POST["ttrss_allow_styles"] ?? "");
+
+		$enable_key = array_search($feed_id, $enabled_feeds);
+
+		if ($enable) {
+			if ($enable_key === false) {
+				array_push($enabled_feeds, $feed_id);
+			}
+		} else {
+			if ($enable_key !== false) {
+				unset($enabled_feeds[$enable_key]);
+			}
+		}
+
+		$this->host->set($this, "enabled_feeds", $enabled_feeds);
+	}
+
 
 	// TODO: create preference and hookup
 }
