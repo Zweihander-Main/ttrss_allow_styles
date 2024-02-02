@@ -39,10 +39,17 @@ class TTRSS_Allow_Styles extends Plugin
 
 	public function hook_sanitize($doc, $site_url, $allowed_elements, $disallowed_attributes, $article_id)
 	{
+		$enabled_feeds = $this->get_stored_array("enabled_feeds");
 
-		$disallowed_attributes = array_filter($disallowed_attributes, function ($attr) {
-			return $attr !== 'style';
-		});
+		$sth = $this->pdo->prepare("SELECT feed_id FROM ttrss_user_entries WHERE int_id = ? LIMIT 1");
+		$sth->execute([$article_id]);
+		$feed_id = (int) $sth->fetch()['feed_id'];
+
+		if (in_array($feed_id, $enabled_feeds)) {
+			$disallowed_attributes = array_filter($disallowed_attributes, function ($attr) {
+				return $attr !== 'style';
+			});
+		}
 
 		return [$doc, $allowed_elements, $disallowed_attributes];
 	}
