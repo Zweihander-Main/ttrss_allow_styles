@@ -64,7 +64,7 @@ class TTRSS_Allow_Styles extends Plugin
 			<fieldset>
 				<label class='checkbox'>
 					<?= \Controls\checkbox_tag("ttrss_allow_styles", in_array($feed_id, $enabled_feeds)) ?>
-					<?= __('Allow \'styles\' attribute in feed items.') ?>
+					<?= __('Allow \'styles\' attribute in feed items') ?>
 				</label>
 			</fieldset>
 		</section>
