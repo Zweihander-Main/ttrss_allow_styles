@@ -18,7 +18,7 @@ Works with the official Android app.
 
 ## Installation:
 
-1. Place whole `ttrss_allow_styles` folder under `ttrss/plugins.local/`.
+1. Place whole `ttrss_allow_styles` folder under `ttrss/plugins.local/`
 2. Enable under `Preferences -> Plugins`
 
 ## Usage:
