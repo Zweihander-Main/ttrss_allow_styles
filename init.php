@@ -43,7 +43,7 @@ class TTRSS_Allow_Styles extends Plugin
 
 		$feed_id = -1;
 
-		$sth = $this->pdo->prepare("SELECT feed_id FROM ttrss_user_entries WHERE int_id = ? LIMIT 1");
+		$sth = $this->pdo->prepare("SELECT feed_id FROM ttrss_user_entries WHERE ref_id = ? LIMIT 1");
 		$sth->execute([$article_id]);
 		if ($sth->rowCount() > 0) {
 			$result = $sth->fetch();
