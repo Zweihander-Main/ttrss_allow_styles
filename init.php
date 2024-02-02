@@ -41,9 +41,16 @@ class TTRSS_Allow_Styles extends Plugin
 	{
 		$enabled_feeds = $this->get_stored_array("enabled_feeds");
 
+		$feed_id = -1;
+
 		$sth = $this->pdo->prepare("SELECT feed_id FROM ttrss_user_entries WHERE int_id = ? LIMIT 1");
 		$sth->execute([$article_id]);
-		$feed_id = (int) $sth->fetch()['feed_id'];
+		if ($sth->rowCount() > 0) {
+			$result = $sth->fetch();
+			if ($result !== false && isset($result['feed_id'])) {
+				$feed_id = (int) $result['feed_id'];
+			}
+		}
 
 		if (in_array($feed_id, $enabled_feeds)) {
 			$disallowed_attributes = array_filter($disallowed_attributes, function ($attr) {
