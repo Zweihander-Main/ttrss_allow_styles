@@ -97,7 +97,4 @@ class TTRSS_Allow_Styles extends Plugin
 
 		$this->host->set($this, "enabled_feeds", $enabled_feeds);
 	}
-
-
-	// TODO: create preference and hookup
 }
